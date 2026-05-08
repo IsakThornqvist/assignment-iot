@@ -1,36 +1,26 @@
 print('hello before utime')
 import utime
-# utime.sleep(1)
 print('hello')
 utime.sleep_ms(200)
-
-# after having waited - if you are having trouble starting main.py
 print('Sleep Done')
-# from machine import Pin
+
 from config import MQTT_BROKER, MQTT_PASSWORD, MQTT_USERNAME
 from umqtt.simple import MQTTClient
 import ubinascii
 import machine
 from machine import Pin
 import network
-import usocket
-import urequests # handles making and servicing network requests
 import dht
-import errno
 import json
-import socket
-import select
-import sys
 
-
-# Simple-ish DHT class to simplify working with the sensor
+# DHT22 class
 class DHT:
     def __init__(self, pin: int):
         self.pin = self.setPin(pin)
         self.sensor = self.setDht(self.pin)
 
     def setDht(self, pin: Pin):
-        return dht.DHT11(pin)
+        return dht.DHT22(pin)
 
     def setPin(self, pin: int):
         return Pin(pin)
@@ -44,14 +34,16 @@ class DHT:
     def getHumidity(self):
         return self.sensor.humidity()
 
-led = Pin(27, Pin.OUT)
 
-# Fill in your network name (ssid) and password here:
+# Pins
+led = Pin(27, Pin.OUT)
+dht_sensor = DHT(33)
+
+# WiFi
 ssid = 'Wokwi-GUEST'
 password = ''
 
-def connect(ssid, passw):
-    #Connect to WLAN
+def connect(ssid, password):
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
@@ -62,56 +54,73 @@ def connect(ssid, passw):
 
 connect(ssid, password)
 
-print('Waiting a little bit before the Mosquitto loop starts.')
-
+# Countdown
 timeElapsed = 0
-
 while timeElapsed < 5:
     timeElapsed += 1
     print(f"{timeElapsed} out of 5 seconds passed...")
     utime.sleep_ms(1000)
 
-# mqqt stuff below
-MQTT_PORT = "8883"
+# MQTT config
+MQTT_PORT = 8883
+MQTT_TOPIC_PUBLISH = b"lnu/iot/it222hp/sensor"
+MQTT_TOPIC_SUBSCRIBE = b"lnu/iot/it222hp/command/led"
 CLIENT_ID = ubinascii.hexlify(machine.unique_id())
-SUBSCRIBE_TOPIC = b"test/topic"
-PUBLISH_TOPIC = b"test/temperature"
+
 ssl_params = {
     "server_hostname": MQTT_BROKER
 }
 
-# callback stuff
+# LED command callback
 def sub_cb(topic, msg):
-    print(f'Callback message: {msg.decode()}')
+    print(f'Received on {topic}: {msg.decode()}')
+    if topic == MQTT_TOPIC_SUBSCRIBE:
+        data = json.loads(msg.decode())
+        if data.get("state") == True:
+            led.on()
+            print("LED ON")
+        else:
+            led.off()
+            print("LED OFF")
 
-# mqtt stuff starts
-mqttClient = MQTTClient(CLIENT_ID, MQTT_BROKER, keepalive=60, user=MQTT_USERNAME.encode("utf-8"), password=MQTT_PASSWORD.encode("utf-8"), ssl=True, ssl_params=ssl_params)
+# Connect MQTT
+mqttClient = MQTTClient(
+    CLIENT_ID,
+    MQTT_BROKER,
+    port=MQTT_PORT,
+    user=MQTT_USERNAME.encode("utf-8"),
+    password=MQTT_PASSWORD.encode("utf-8"),
+    ssl=True,
+    ssl_params=ssl_params,
+    keepalive=60
+)
+
 mqttClient.set_callback(sub_cb)
-
-print(mqttClient.user)
 mqttClient.connect()
-mqttClient.subscribe(SUBSCRIBE_TOPIC)
+mqttClient.subscribe(MQTT_TOPIC_SUBSCRIBE)
+print("Connected to MQTT and subscribed")
 
-
-
-
-dht_sensor = DHT(33)
-counter = 0
+# Main loop
 while True:
-    # check message
     mqttClient.check_msg()
-    # mqtt stuff ends
-    counter += 1
-    print('hi, starting')
+
     dht_sensor.measure()
     humidity = dht_sensor.getHumidity()
     temperature = dht_sensor.getTemperature()
-    led.on()
-    utime.sleep_ms(500)
-    led.off()
-    
-    print('alive')
-    print(f"Temperature: {temperature}° C\nHumidity: {humidity}%")
-    # attempt to publish
-    mqttClient.publish(topic=PUBLISH_TOPIC, msg=str(temperature).encode(), retain=False, qos=0)
-    utime.sleep_ms(3000)
+
+    print(f"Temperature: {temperature}°C | Humidity: {humidity}%")
+
+    payload = json.dumps({
+        "temperature": temperature,
+        "humidity": humidity,
+        "timestamp": utime.time()
+    })
+
+    mqttClient.publish(
+        topic=MQTT_TOPIC_PUBLISH,
+        msg=payload.encode(),
+        retain=False,
+        qos=0
+    )
+
+    utime.sleep_ms(5000)
