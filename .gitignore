@@ -1,5 +1,7 @@
 **/config.py
 config.py
+.env
 *.bin
 /firmware.bin
 firmware.bin
+node_modules
