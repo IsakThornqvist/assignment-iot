@@ -1,8 +1,9 @@
-import SensorReading from "./models/sensorReadingsModel"
+import SensorReading from "./models/sensorReadingsModel.js"
 import mqtt from 'mqtt' 
 import dotenv from 'dotenv'
 
 dotenv.config()
+console.log('Broker:', process.env.MQTT_BROKER)
 
 const mqttBroker = process.env.MQTT_BROKER
 const mqttUsername = process.env.MQTT_USERNAME
