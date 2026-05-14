@@ -4,7 +4,7 @@ import SensorReading from "../models/sensorReadingsModel.js"
 export class SensorController {
 
 
-export async getReadings(req, res, next) {
+async getReadings(req, res, next) {
     try {
         const readings = await SensorReading.find()
             .sort({ createdAt: -1 })
