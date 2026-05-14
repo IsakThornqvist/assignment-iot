@@ -5,6 +5,6 @@ export const router = express.Router()
 
 const controller = new SensorController()
 
-router.get('/', (req, res, next) => controller.index(req, res, next))
+router.get('/', (req, res, next) => controller.getReadings(req, res, next))
 
 
