@@ -14,10 +14,9 @@ const SensorChart = ({ readings }: SensorChartProps) => {
     
 
 return (
+    <ResponsiveContainer width="100%" height={400}>
 <LineChart
-      style={{ width: '100%', maxWidth: '700px', height: '100%', maxHeight: '70vh', aspectRatio: 1.618 }}
-      responsive
-      data={data}
+      data={readings}
       margin={{
         top: 5,
         right: 0,
@@ -26,7 +25,7 @@ return (
       }}
     >
       <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-3)" />
-      <XAxis dataKey="name" stroke="var(--color-text-3)" />
+      <XAxis dataKey="createdAt" stroke="var(--color-text-3)" />
       <YAxis width="auto" stroke="var(--color-text-3)" />
       <Tooltip
         cursor={{
@@ -40,7 +39,7 @@ return (
       <Legend />
       <Line
         type="monotone"
-        dataKey="pv"
+        dataKey="temperature"
         stroke="var(--color-chart-1)"
         dot={{
           fill: 'var(--color-surface-base)',
@@ -49,18 +48,20 @@ return (
       />
       <Line
         type="monotone"
-        dataKey="uv"
+        dataKey="humidity"
         stroke="var(--color-chart-2)"
         dot={{
           fill: 'var(--color-surface-base)',
         }}
         activeDot={{ stroke: 'var(--color-surface-base)' }}
       />
-      <RechartsDevtools />
     </LineChart>
+    </ResponsiveContainer>
 
     
 )
 }
+
+export default SensorChart
 
 
