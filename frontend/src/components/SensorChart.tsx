@@ -25,36 +25,29 @@ return (
       }}
     >
       <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-3)" />
-      <XAxis dataKey="createdAt" stroke="var(--color-text-3)" />
-      <YAxis width="auto" stroke="var(--color-text-3)" />
-      <Tooltip
-        cursor={{
-          stroke: 'var(--color-border-2)',
-        }}
-        contentStyle={{
-          backgroundColor: 'var(--color-surface-raised)',
-          borderColor: 'var(--color-border-2)',
-        }}
-      />
-      <Legend />
-      <Line
-        type="monotone"
-        dataKey="temperature"
-        stroke="var(--color-chart-1)"
-        dot={{
-          fill: 'var(--color-surface-base)',
-        }}
-        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
-      />
-      <Line
-        type="monotone"
-        dataKey="humidity"
-        stroke="var(--color-chart-2)"
-        dot={{
-          fill: 'var(--color-surface-base)',
-        }}
-        activeDot={{ stroke: 'var(--color-surface-base)' }}
-      />
+<XAxis 
+    dataKey="createdAt" 
+    stroke="#888"
+    tickFormatter={(value) => new Date(value).toLocaleTimeString()}
+/>
+<YAxis stroke="#888" />
+<CartesianGrid strokeDasharray="3 3" stroke="#333" />
+<Tooltip 
+    contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#444' }}
+    labelFormatter={(value) => new Date(value).toLocaleTimeString()}
+/>
+<Line
+    type="monotone"
+    dataKey="temperature"
+    stroke="#ff6b6b"
+    dot={false}
+/>
+<Line
+    type="monotone"
+    dataKey="humidity"
+    stroke="#4ecdc4"
+    dot={false}
+/>
     </LineChart>
     </ResponsiveContainer>
 
