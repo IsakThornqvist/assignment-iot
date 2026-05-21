@@ -1,3 +1,13 @@
+/**
+ * Express server entry point.
+ *
+ * Initialises the database connection, MQTT client,
+ * and HTTP server with all middleware and routes.
+ *
+ * @author Isak Thörnqvist
+ * @version 1.0.0
+ */
+
 import express from 'express'
 import connectDB from './db.js'
 import connectMqttBroker from './mqttClient.js'
@@ -10,7 +20,7 @@ const directoryFullName = dirname(fileURLToPath(import.meta.url))
 
 try {
     await connectDB()
-    
+
     connectMqttBroker()
 
     const app = express()
@@ -18,8 +28,10 @@ try {
     app.use(cors())
     app.use(express.static(join(directoryFullName, 'public')))
 
+    /** Mount all API routes under /api */
     app.use('/api', router)
 
+    /** Global error handling middleware */
     app.use((err, req, res, next) => {
         console.error(err)
         res.status(err.status || 500).json({ error: err.message })
