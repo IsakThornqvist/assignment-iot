@@ -16,8 +16,8 @@ import SensorReading from "../models/sensorReadingsModel.js"
 export class SensorController {
 
     /**
-     * Retrieves the 50 most recent sensor readings from the database,
-     * sorted by creation date in descending order.
+     * Retrieves sensor readings from the last 30 minutes,
+     * sorted by creation date in ascending order, limited to 50.
      *
      * @param {import('express').Request} req - Express request object.
      * @param {import('express').Response} res - Express response object.
@@ -26,8 +26,12 @@ export class SensorController {
      */
     async getReadings(req, res, next) {
         try {
-            const readings = await SensorReading.find()
-                .sort({ createdAt: -1 })
+            const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000)
+
+            const readings = await SensorReading.find({
+                createdAt: { $gte: thirtyMinutesAgo }
+            })
+                .sort({ createdAt: 1 })
                 .limit(50)
             
             res.json(readings)

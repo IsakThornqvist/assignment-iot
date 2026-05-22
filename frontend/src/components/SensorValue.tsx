@@ -24,8 +24,8 @@ return (
 
 <div>
 
-    <p> Current Temperature: {temperature} </p>
-    <p> Current Humidity: {humidity} </p>
+    <p> Current Temperature: {temperature ?? 'No data'} </p>
+    <p> Current Humidity: {humidity ?? 'No data'} </p>
 
 </div>
 
