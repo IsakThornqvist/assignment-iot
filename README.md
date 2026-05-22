@@ -3,10 +3,10 @@
 ## Report
 
 ### 1) Project Links
-- **Live Dashboard URL:** Later
+- **Live Dashboard URL:** https://assignment-iot-production-045f.up.railway.app/
 - **Wokwi Simulation URL:** Later
-- **Backend/Database URL:** Later
-- **Repository URL:** Later
+- **Backend/Database URL:** https://assignment-iot-production.up.railway.app/
+- **Repository URL:** https://github.com/IsakThornqvist/assignment-iot
 
 ### 2) Project Overview
 This project implements an end-to-end IoT pipeline that simulates a connected device, 
