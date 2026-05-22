@@ -1,6 +1,6 @@
 # Assignment: Internet of Things (IoT)
 
-## Submission Report
+## Report
 
 ### 1) Project Links
 - **Live Dashboard URL:** Later
