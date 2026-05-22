@@ -14,7 +14,7 @@ import connectMqttBroker from './mqttClient.js'
 import cors from 'cors'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { router } from '../backend/routes/router.js'
+import { router } from './routes/router.js'
 
 const directoryFullName = dirname(fileURLToPath(import.meta.url))
 
