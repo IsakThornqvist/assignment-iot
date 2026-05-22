@@ -49,7 +49,7 @@ export function useAllSensorData() {
             client.subscribe("lnu/iot/it222hp/sensor")
         })
 
-        client.on("message", (topic, message) => {
+        client.on("message", (_topic, message) => {
             const payload = JSON.parse(message.toString())
             const newReading = {
                 ...payload,
