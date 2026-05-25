@@ -11,11 +11,14 @@ MQTT_BROKER = "your-hivemq-host"
 MQTT_USERNAME = "your-username"
 MQTT_PASSWORD = "your-password"
 ```
-5. Open `wokwi/diagram.json` and click the green play button
-6.  Run the following mpremote commands to transfer files:
+5. Open `wokwi/diagram.json` in VSCode and click the green play button to start the simulation
+6. Open a terminal, navigate to the `wokwi/` folder and run:
 ```bash
+cd wokwi
 mpremote connect port:rfc2217://localhost:4000 sleep 3 mount . run main.py
 ```
+7. The device will connect to HiveMQ and start publishing sensor data every 5 seconds
+
 ## Report
 
 ### 1) Project Links
