@@ -1,10 +1,26 @@
 # Assignment: Internet of Things (IoT)
+## Getting Started
 
+### Running the Wokwi Simulation
+1. Clone the repository
+2. Open the project in VSCode with the Wokwi extension installed
+3. Download the MicroPython firmware from [micropython.org](https://micropython.org/download/ESP32_GENERIC/) and place it in the `wokwi/` folder
+4. Create `wokwi/config.py` with your HiveMQ credentials:
+```python
+MQTT_BROKER = "your-hivemq-host"
+MQTT_USERNAME = "your-username"
+MQTT_PASSWORD = "your-password"
+```
+5. Open `wokwi/diagram.json` and click the green play button
+6.  Run the following mpremote commands to transfer files:
+```bash
+mpremote connect port:rfc2217://localhost:4000 sleep 3 mount . run main.py
+```
 ## Report
 
 ### 1) Project Links
 - **Live Dashboard URL:** https://assignment-iot-production-045f.up.railway.app/
-- **Wokwi Simulation URL:** Later
+- **Wokwi Simulation:** https://github.com/IsakThornqvist/assignment-iot/tree/main/wokwi
 - **Backend/Database URL:** https://assignment-iot-production.up.railway.app/
 - **Repository URL:** https://github.com/IsakThornqvist/assignment-iot
 
@@ -78,6 +94,9 @@ LED based on the received state.
     limit of 50 readings per query prevents sending excessive data to the frontend
   - MongoDB was chosen for simplicity, as the data volume at this scale does not require specialized 
     time-series optimizations
+
+  **Historical data access path:** Path A was chosen, a custom REST API endpoint 
+`GET /api/readings` returns the last 30 minutes of sensor data on dashboard load.
 
 ### 5) MQTT Topics and Payload Documentation
 
